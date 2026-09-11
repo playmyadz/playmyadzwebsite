@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import express from "express";
 import { config, validateConfig } from "./config.js";
 import { db, initializeDatabase, releaseExpiredReservations } from "./db.js";
-import { sendBookingConfirmation, sendOtpEmail } from "./email.js";
+import { sendBookingConfirmation, sendOtpEmail, sendPaymentReviewAlert } from "./email.js";
 import { calculatePricing, getCampaignDates, getPackage } from "./pricing.js";
 import {
   clearSessionCookie,
@@ -239,6 +239,7 @@ async function sendConfirmationOnce(bookingId) {
 async function confirmPaidBooking({ orderId, paymentId }) {
   const connection = await db.getConnection();
   let bookingId;
+  let requiresReview = false;
   try {
     await connection.beginTransaction();
     const [rows] = await connection.execute(
@@ -251,7 +252,7 @@ async function confirmPaidBooking({ orderId, paymentId }) {
       return null;
     }
     bookingId = booking.id;
-    if (!["confirmed", "started", "completed"].includes(booking.status)) {
+    if (["payment_pending", "payment_authorized"].includes(booking.status)) {
       await connection.execute(
         `UPDATE bookings SET status = 'confirmed', razorpay_payment_id = COALESCE(?, razorpay_payment_id), paid_at = UTC_TIMESTAMP()
          WHERE id = ?`,
@@ -261,6 +262,13 @@ async function confirmPaidBooking({ orderId, paymentId }) {
         "UPDATE booking_slots SET status = 'confirmed', expires_at = NULL WHERE booking_id = ?",
         [booking.id],
       );
+    } else if (["expired", "cancelled"].includes(booking.status)) {
+      requiresReview = true;
+      await connection.execute(
+        `UPDATE bookings SET status = 'payment_review', razorpay_payment_id = COALESCE(?, razorpay_payment_id), paid_at = UTC_TIMESTAMP()
+         WHERE id = ?`,
+        [paymentId || null, booking.id],
+      );
     }
     await connection.commit();
   } catch (error) {
@@ -269,10 +277,25 @@ async function confirmPaidBooking({ orderId, paymentId }) {
   } finally {
     connection.release();
   }
-  try {
-    await sendConfirmationOnce(bookingId);
-  } catch (error) {
-    console.error("Booking confirmation email failed", error);
+  if (requiresReview) {
+    try {
+      const [rows] = await db.execute(
+        `SELECT bookings.*, users.email, users.full_name, users.business_name, users.mobile
+         FROM bookings INNER JOIN users ON users.id = bookings.user_id WHERE bookings.id = ?`,
+        [bookingId],
+      );
+      if (rows[0]) {
+        await sendPaymentReviewAlert({ booking: rows[0], customer: rows[0] });
+      }
+    } catch (error) {
+      console.error("Payment review alert email failed", error);
+    }
+  } else {
+    try {
+      await sendConfirmationOnce(bookingId);
+    } catch (error) {
+      console.error("Booking confirmation email failed", error);
+    }
   }
   return bookingId;
 }

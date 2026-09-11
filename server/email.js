@@ -68,3 +68,13 @@ export async function sendBookingConfirmation({ booking, customer, tripOtp }) {
     }),
   ]);
 }
+
+export async function sendPaymentReviewAlert({ booking, customer }) {
+  const details = bookingText(booking, "Withheld pending review");
+  await transporter.sendMail({
+    from: config.emailFrom,
+    to: config.adminEmail,
+    subject: `Payment needs manual review: ${booking.booking_reference}`,
+    text: `A payment was captured after this reservation expired or was cancelled. Do not assign the truck until availability is checked.\n\n${details}\n\nCustomer: ${customer.full_name}\nEmail: ${customer.email}\nMobile: ${customer.mobile}`,
+  });
+}
