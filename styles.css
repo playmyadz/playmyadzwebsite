@@ -1801,6 +1801,31 @@ textarea {
   margin-top: 24px;
 }
 
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+}
+
+.booking-confirmation {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(45, 212, 191, 0.3);
+  border-radius: var(--radius-lg);
+  background: rgba(45, 212, 191, 0.1);
+}
+
+.booking-confirmation .success-mark {
+  flex: 0 0 auto;
+}
+
+.booking-confirmation p {
+  margin: 4px 0 0;
+}
+
 .quote-card {
   position: sticky;
   top: 24px;

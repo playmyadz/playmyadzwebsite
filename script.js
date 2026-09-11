@@ -17,6 +17,13 @@ const state = {
   date: "",
 };
 
+const runtime = {
+  account: null,
+  availability: false,
+  booking: null,
+  checkingAvailability: false,
+};
+
 const routes = {
   metro: {
     name: "Airport Axis",
@@ -53,13 +60,6 @@ const slotPricing = {
   Afternoon: 1500,
   Evening: 3200,
   Night: 2600,
-};
-
-const availabilityText = {
-  Morning: "14 morning slots currently open",
-  Afternoon: "11 afternoon slots currently open",
-  Evening: "8 evening slots currently open",
-  Night: "6 night slots currently open",
 };
 
 const currency = new Intl.NumberFormat("en-IN", {
@@ -148,9 +148,14 @@ const focusTripOtp = document.querySelector("#focusTripOtp");
 const trackingOtpInput = document.querySelector("#trackingOtpInput");
 const trackingOtpHelp = document.querySelector("#trackingOtpHelp");
 const trackingOtpVerify = document.querySelector("#trackingOtpVerify");
-
-const EMAIL_DEMO_CODE = "418206";
-const TRIP_DEMO_CODE = "274891";
+const registrationHelp = document.querySelector("#registrationHelp");
+const campaignEmail = document.querySelector("#campaignEmail");
+const payNowButton = document.querySelector("#payNowButton");
+const paymentStatus = document.querySelector("#paymentStatus");
+const bookingConfirmation = document.querySelector("#bookingConfirmation");
+const bookingConfirmationTitle = document.querySelector("#bookingConfirmationTitle");
+const bookingConfirmationCopy = document.querySelector("#bookingConfirmationCopy");
+const tripOtpDisplay = document.querySelector("#tripOtpDisplay");
 let pendingAccount = null;
 
 const trackerStops = [
@@ -165,11 +170,25 @@ let trackerProgress = 0.12;
 let trackerRunning = true;
 
 function getVerifiedAccount() {
-  try {
-    return JSON.parse(sessionStorage.getItem("playmyadzVerifiedAccount") || "null");
-  } catch {
-    return null;
+  return runtime.account;
+}
+
+async function api(path, options = {}) {
+  const response = await fetch(path, {
+    credentials: "same-origin",
+    ...options,
+    headers: {
+      ...(options.body ? { "Content-Type": "application/json" } : {}),
+      ...options.headers,
+    },
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const error = new Error(payload.error || "We could not complete that request.");
+    error.status = response.status;
+    throw error;
   }
+  return payload;
 }
 
 function maskEmail(email) {
@@ -183,7 +202,7 @@ function maskEmail(email) {
 
 function renderPortalAccess() {
   const account = getVerifiedAccount();
-  const tripStarted = sessionStorage.getItem("playmyadzTripStarted") === "true";
+  const tripStarted = runtime.booking?.status === "started";
 
   state.otpVerified = tripStarted;
   routePage.classList.toggle("portal-access-granted", Boolean(account));
@@ -195,20 +214,34 @@ function renderPortalAccess() {
 
   if (account) {
     verifiedAccountCopy.textContent = `${account.name}, ${account.email} is verified. Availability, routes, packages, payment, and trip controls are unlocked for this session.`;
+    campaignEmail.value = account.email;
+    if (!businessNameInput.value || businessNameInput.value === "BlueSip Beverages") {
+      businessNameInput.value = account.business;
+      state.businessName = account.business;
+    }
   }
 }
 
-function startTrip(code, helpElement) {
-  if (code !== TRIP_DEMO_CODE) {
-    helpElement.textContent = "Incorrect code. Use 274891 for this prototype campaign.";
+async function startTrip(code, helpElement) {
+  if (!runtime.booking?.id) {
+    helpElement.textContent = "A confirmed booking is required before the trip can start.";
     return false;
   }
-
-  sessionStorage.setItem("playmyadzTripStarted", "true");
-  routePage.classList.add("trip-started");
-  state.otpVerified = true;
-  renderVerification();
-  return true;
+  try {
+    await api(`/api/bookings/${encodeURIComponent(runtime.booking.id)}/start`, {
+      method: "POST",
+      body: JSON.stringify({ code }),
+    });
+    runtime.booking.status = "started";
+    routePage.classList.add("trip-started");
+    state.otpVerified = true;
+    helpElement.textContent = "Trip verified. Live tracking is now unlocked.";
+    renderVerification();
+    return true;
+  } catch (error) {
+    helpElement.textContent = error.message;
+    return false;
+  }
 }
 
 function formatCurrency(amount) {
@@ -367,7 +400,46 @@ function renderCreativeState() {
 }
 
 function renderScheduleState() {
-  availabilityLabel.textContent = availabilityText[state.slot];
+  if (!runtime.account) {
+    availabilityLabel.textContent = "Sign in to check live availability";
+  } else if (runtime.checkingAvailability) {
+    availabilityLabel.textContent = "Checking the live schedule...";
+  } else {
+    availabilityLabel.textContent = runtime.availability
+      ? `${state.truck} is available for the full package`
+      : `${state.truck} is unavailable for one or more selected dates`;
+  }
+  payNowButton.disabled = !runtime.account || !runtime.availability || runtime.checkingAvailability;
+  payNowButton.textContent = runtime.availability ? "Reserve dates and pay securely" : "Check availability to continue";
+}
+
+async function checkAvailability() {
+  runtime.availability = false;
+  if (!runtime.account || !state.date) {
+    renderScheduleState();
+    return;
+  }
+  runtime.checkingAvailability = true;
+  renderScheduleState();
+  const parameters = new URLSearchParams({
+    truckId: state.truck,
+    packageCode: state.package,
+    slot: state.slot,
+    startDate: state.date,
+  });
+  try {
+    const result = await api(`/api/availability?${parameters}`);
+    runtime.availability = result.available;
+    availabilityLabel.textContent = result.available
+      ? `${state.truck} is available for all ${result.campaignDates.length} selected day${result.campaignDates.length === 1 ? "" : "s"}`
+      : `Unavailable on ${result.conflictingDates.join(", ")}`;
+  } catch (error) {
+    availabilityLabel.textContent = error.message;
+  } finally {
+    runtime.checkingAvailability = false;
+    payNowButton.disabled = !runtime.availability;
+    payNowButton.textContent = runtime.availability ? "Reserve dates and pay securely" : "Check availability to continue";
+  }
 }
 
 function renderVerification() {
@@ -383,6 +455,7 @@ function renderVerification() {
   verificationTracking.textContent = state.otpVerified ? "Live" : "Locked";
   otpResult.classList.toggle("is-verified", state.otpVerified);
   verifyOtp.textContent = state.otpVerified ? "Verified" : "Verify and start tracking";
+  tripOtpDisplay.textContent = runtime.booking?.tripOtp || "Available after payment";
 }
 
 function renderTracker() {
@@ -423,7 +496,9 @@ function advanceTracker() {
 
 function createDateChoices() {
   const dateChoices = document.querySelector("#dateChoices");
-  const startDate = new Date("2026-09-10T00:00:00");
+  const startDate = new Date();
+  startDate.setHours(12, 0, 0, 0);
+  startDate.setDate(startDate.getDate() + 1);
 
   for (let index = 0; index < 6; index += 1) {
     const date = new Date(startDate);
@@ -447,6 +522,7 @@ function createDateChoices() {
       [...dateChoices.querySelectorAll(".choice-chip")].forEach((chip) => {
         chip.classList.toggle("is-selected", chip === button);
       });
+      checkAvailability();
     });
 
     dateChoices.appendChild(button);
@@ -575,6 +651,7 @@ packageButtons.forEach((button) => {
       card.classList.toggle("is-selected", card === button);
     });
     renderSummary();
+    checkAvailability();
   });
 });
 
@@ -587,6 +664,7 @@ vehicleButtons.forEach((button) => {
     });
     renderSummary();
     renderVerification();
+    checkAvailability();
   });
 });
 
@@ -596,8 +674,8 @@ slotButtons.forEach((button) => {
     slotButtons.forEach((chip) => {
       chip.classList.toggle("is-selected", chip === button);
     });
-    renderScheduleState();
     renderSummary();
+    checkAvailability();
   });
 });
 
@@ -605,6 +683,113 @@ trackerToggle.addEventListener("click", () => {
   trackerRunning = !trackerRunning;
   trackerToggle.textContent = trackerRunning ? "Pause live demo" : "Resume live demo";
   renderTracker();
+});
+
+function bookingPayload() {
+  return {
+    truckId: state.truck,
+    packageCode: state.package,
+    routeCode: state.customRoute ? "custom" : state.route,
+    origin: state.customRoute ? state.origin : routes[state.route].origin,
+    destination: state.customRoute ? state.destination : routes[state.route].destination,
+    radiusKm: state.radius,
+    durationSeconds: state.duration,
+    creativeType: state.creativeType,
+    needsVideo: state.needsVideo,
+    startDate: state.date,
+    slot: state.slot,
+  };
+}
+
+async function completePayment(paymentResponse) {
+  paymentStatus.textContent = "Verifying payment with Razorpay...";
+  const result = await api("/api/payments/verify", {
+    method: "POST",
+    body: JSON.stringify(paymentResponse),
+  });
+  runtime.booking = {
+    id: result.bookingId,
+    reference: result.bookingReference,
+    status: result.status,
+    tripOtp: result.tripOtp,
+  };
+  if (result.status === "confirmed") {
+    bookingConfirmation.classList.remove("is-hidden");
+    bookingConfirmationTitle.textContent = `Booking ${result.bookingReference} confirmed`;
+    bookingConfirmationCopy.textContent = "Your receipt and unique trip-start code have been emailed to you.";
+    paymentStatus.textContent = "Payment captured and booking confirmed.";
+    runtime.availability = false;
+    renderScheduleState();
+    renderVerification();
+    showPanel("verification");
+  } else {
+    paymentStatus.textContent = "Payment authorized. Confirmation will arrive as soon as capture completes.";
+  }
+}
+
+payNowButton.addEventListener("click", async () => {
+  if (!runtime.account || !runtime.availability) {
+    paymentStatus.textContent = "Verify your email and choose an available slot first.";
+    return;
+  }
+  if (state.customRoute) {
+    paymentStatus.textContent = "Custom routes need a distance review before payment. Choose a verified route or contact PlayMyAdz.";
+    return;
+  }
+  if (!window.Razorpay) {
+    paymentStatus.textContent = "Secure checkout is still loading. Please try again in a moment.";
+    return;
+  }
+
+  payNowButton.disabled = true;
+  payNowButton.textContent = "Reserving your dates...";
+  paymentStatus.textContent = "Creating a secure payment order...";
+  bookingConfirmation.classList.add("is-hidden");
+  try {
+    const order = await api("/api/bookings/order", {
+      method: "POST",
+      body: JSON.stringify(bookingPayload()),
+    });
+    const checkout = new window.Razorpay({
+      key: order.keyId,
+      amount: order.amount,
+      currency: order.currency,
+      name: "PlayMyAdz",
+      description: `Mobile LED campaign ${order.bookingReference}`,
+      order_id: order.orderId,
+      prefill: {
+        name: runtime.account.name,
+        email: runtime.account.email,
+        contact: runtime.account.mobile,
+      },
+      notes: { booking_reference: order.bookingReference },
+      theme: { color: "#19b9ad" },
+      handler: async (response) => {
+        try {
+          await completePayment(response);
+        } catch (error) {
+          paymentStatus.textContent = error.message;
+        }
+      },
+      modal: {
+        ondismiss: () => {
+          paymentStatus.textContent = "Payment was not completed. Your slot remains reserved for up to 15 minutes.";
+        },
+      },
+    });
+    checkout.on("payment.failed", (response) => {
+      paymentStatus.textContent = response.error?.description || "Payment failed. Please try again.";
+    });
+    checkout.open();
+  } catch (error) {
+    paymentStatus.textContent = error.message;
+    if (error.status === 409) {
+      runtime.availability = false;
+    }
+  } finally {
+    payNowButton.disabled = !runtime.availability;
+    payNowButton.textContent = runtime.availability ? "Reserve dates and pay securely" : "Check availability to continue";
+  }
 });
 
 otpInput.addEventListener("input", () => {
@@ -615,17 +800,17 @@ otpInput.addEventListener("input", () => {
   }
 });
 
-verifyOtp.addEventListener("click", () => {
-  if (!startTrip(otpInput.value, otpHelp)) {
+verifyOtp.addEventListener("click", async () => {
+  if (!await startTrip(otpInput.value, otpHelp)) {
     otpBadge.textContent = "Incorrect code";
-    verificationTitle.textContent = "Try the demo code again";
-    verificationCopy.textContent = "Enter 274891 to simulate a verified campaign start.";
+    verificationTitle.textContent = "Trip verification unsuccessful";
+    verificationCopy.textContent = "Check the unique code in your booking confirmation email.";
     return;
   }
   renderVerification();
 });
 
-registrationForm.addEventListener("submit", (event) => {
+registrationForm.addEventListener("submit", async (event) => {
   event.preventDefault();
   pendingAccount = {
     name: document.querySelector("#registerName").value.trim(),
@@ -633,25 +818,56 @@ registrationForm.addEventListener("submit", (event) => {
     email: document.querySelector("#registerEmail").value.trim().toLowerCase(),
     mobile: document.querySelector("#registerMobile").value.trim(),
   };
-  verificationEmail.textContent = maskEmail(pendingAccount.email);
-  registrationCard.classList.add("is-hidden");
-  emailVerificationCard.classList.remove("is-hidden");
-  emailOtpInput.focus();
+  const submitButton = registrationForm.querySelector('button[type="submit"]');
+  submitButton.disabled = true;
+  submitButton.textContent = "Sending secure code...";
+  registrationHelp.textContent = "Connecting to the email service...";
+  try {
+    await api("/api/auth/request-otp", {
+      method: "POST",
+      body: JSON.stringify(pendingAccount),
+    });
+    verificationEmail.textContent = maskEmail(pendingAccount.email);
+    registrationCard.classList.add("is-hidden");
+    emailVerificationCard.classList.remove("is-hidden");
+    emailOtpHelp.textContent = "Code sent. It expires in 10 minutes.";
+    emailOtpInput.focus();
+  } catch (error) {
+    registrationHelp.textContent = error.message;
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = "Send email verification code";
+  }
 });
 
 emailOtpInput.addEventListener("input", () => {
   emailOtpInput.value = emailOtpInput.value.replace(/\D/g, "").slice(0, 6);
-  emailOtpHelp.textContent = "Prototype code: 418206";
+  emailOtpHelp.textContent = "Enter the code from your email. It expires in 10 minutes.";
 });
 
-verifyEmailButton.addEventListener("click", () => {
-  if (!pendingAccount || emailOtpInput.value !== EMAIL_DEMO_CODE) {
-    emailOtpHelp.textContent = "Incorrect code. Use 418206 for this prototype registration.";
+verifyEmailButton.addEventListener("click", async () => {
+  if (!pendingAccount || emailOtpInput.value.length !== 6) {
+    emailOtpHelp.textContent = "Enter the complete six-digit code from your email.";
     return;
   }
-
-  sessionStorage.setItem("playmyadzVerifiedAccount", JSON.stringify(pendingAccount));
-  renderPortalAccess();
+  verifyEmailButton.disabled = true;
+  verifyEmailButton.textContent = "Verifying...";
+  try {
+    const result = await api("/api/auth/verify-otp", {
+      method: "POST",
+      body: JSON.stringify({ email: pendingAccount.email, code: emailOtpInput.value }),
+    });
+    runtime.account = result.user;
+    emailVerificationCard.classList.add("is-hidden");
+    renderPortalAccess();
+    renderSummary();
+    await Promise.all([checkAvailability(), loadLatestBooking()]);
+  } catch (error) {
+    emailOtpHelp.textContent = error.message;
+  } finally {
+    verifyEmailButton.disabled = false;
+    verifyEmailButton.textContent = "Verify email and open portal";
+  }
 });
 
 changeRegistrationButton.addEventListener("click", () => {
@@ -659,21 +875,33 @@ changeRegistrationButton.addEventListener("click", () => {
   registrationCard.classList.remove("is-hidden");
 });
 
-signOutButton.addEventListener("click", () => {
-  sessionStorage.removeItem("playmyadzVerifiedAccount");
-  sessionStorage.removeItem("playmyadzTripStarted");
+signOutButton.addEventListener("click", async () => {
+  try {
+    await api("/api/auth/sign-out", { method: "POST" });
+  } catch {
+    // Clear the local view even if the server session already expired.
+  }
+  runtime.account = null;
+  runtime.booking = null;
+  runtime.availability = false;
   pendingAccount = null;
   registrationForm.reset();
   emailOtpInput.value = "";
   renderPortalAccess();
+  renderScheduleState();
 });
 
 copyTripOtp.addEventListener("click", async () => {
+  const tripOtp = runtime.booking?.tripOtp;
+  if (!tripOtp) {
+    copyTripOtp.textContent = "Available after payment";
+    return;
+  }
   try {
-    await navigator.clipboard.writeText(TRIP_DEMO_CODE);
+    await navigator.clipboard.writeText(tripOtp);
     copyTripOtp.textContent = "OTP copied for driver";
   } catch {
-    copyTripOtp.textContent = `Driver OTP: ${TRIP_DEMO_CODE}`;
+    copyTripOtp.textContent = `Driver OTP: ${tripOtp}`;
   }
 });
 
@@ -683,22 +911,60 @@ focusTripOtp.addEventListener("click", () => {
 
 trackingOtpInput.addEventListener("input", () => {
   trackingOtpInput.value = trackingOtpInput.value.replace(/\D/g, "").slice(0, 6);
-  trackingOtpHelp.textContent = "Prototype code: 274891";
+  trackingOtpHelp.textContent = "Enter the code from your confirmed booking.";
 });
 
-trackingOtpVerify.addEventListener("click", () => {
-  if (startTrip(trackingOtpInput.value, trackingOtpHelp)) {
+trackingOtpVerify.addEventListener("click", async () => {
+  if (await startTrip(trackingOtpInput.value, trackingOtpHelp)) {
     renderTracker();
   }
 });
 
-renderPortalAccess();
+async function loadLatestBooking() {
+  if (!runtime.account) {
+    return;
+  }
+  try {
+    const result = await api("/api/bookings/latest");
+    runtime.booking = result.booking;
+    state.truck = result.booking.truckId;
+    state.otpVerified = result.booking.status === "started";
+    bookingConfirmation.classList.remove("is-hidden");
+    bookingConfirmationTitle.textContent = `Booking ${result.booking.reference}`;
+    bookingConfirmationCopy.textContent = result.booking.status === "started"
+      ? "This campaign trip has started and live tracking is unlocked."
+      : "Confirmed. Your trip-start code is available in the verification step and confirmation email.";
+    renderVerification();
+    renderPortalAccess();
+  } catch (error) {
+    if (error.status !== 404) {
+      paymentStatus.textContent = error.message;
+    }
+  }
+}
+
+async function loadSession() {
+  try {
+    const result = await api("/api/auth/me");
+    runtime.account = result.user;
+    renderPortalAccess();
+    renderSummary();
+    await Promise.all([checkAvailability(), loadLatestBooking()]);
+  } catch (error) {
+    if (error.status !== 401) {
+      registrationHelp.textContent = "The booking service is temporarily unavailable. Please try again shortly.";
+    }
+    renderPortalAccess();
+    renderScheduleState();
+  }
+}
+
 createDateChoices();
 renderApproval();
 renderCreativeState();
 renderRoute();
-renderScheduleState();
 renderSummary();
 renderVerification();
 renderTracker();
+loadSession();
 setInterval(advanceTracker, 1000);

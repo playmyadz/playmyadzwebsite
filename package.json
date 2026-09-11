@@ -9,10 +9,15 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
+    "start:hostinger": "node server/app.js",
+    "test:server": "node --test server/*.test.js",
     "lint": "eslint . --ignore-pattern dist --ignore-pattern .next"
   },
   "dependencies": {
+    "express": "^5.2.1",
+    "mysql2": "^3.24.4",
     "next": "16.2.6",
+    "nodemailer": "^10.0.7",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },

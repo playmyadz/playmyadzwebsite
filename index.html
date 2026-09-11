@@ -17,6 +17,7 @@
     rel="stylesheet"
   >
   <link rel="stylesheet" href="styles.css?v=10">
+  <script src="https://checkout.razorpay.com/v1/checkout.js" defer></script>
 </head>
 <body class="route-page route-home">
   <script>
@@ -163,7 +164,7 @@
               </label>
               <button class="button button-primary account-form-wide" type="submit">Send email verification code</button>
             </form>
-            <p class="form-note">Production accounts will be stored securely on the server. Passwords and payment credentials are never kept in this page.</p>
+            <p class="form-note" id="registrationHelp">We will email a six-digit code that expires in 10 minutes. Payment credentials are handled securely by Razorpay.</p>
           </div>
 
           <div class="account-card is-hidden" id="emailVerificationCard">
@@ -179,7 +180,7 @@
               Email verification code
               <input id="emailOtpInput" class="otp-input" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000">
             </label>
-            <p class="map-help" id="emailOtpHelp">Prototype code: 418206</p>
+            <p class="map-help" id="emailOtpHelp">Enter the code from your email. It expires in 10 minutes.</p>
             <button class="button button-primary wide-button" id="verifyEmailButton" type="button">Verify email and open portal</button>
             <button class="text-button" id="changeRegistrationButton" type="button">Change registration details</button>
           </div>
@@ -441,7 +442,7 @@
                   </label>
                   <label>
                     Contact email
-                    <input type="email" value="campaigns@bluesip.example">
+                    <input id="campaignEmail" type="email" placeholder="you@company.com" readonly>
                   </label>
                   <label>
                     Ad type
@@ -753,7 +754,7 @@
                   </div>
                   <div class="availability-card">
                     <span>Real-time availability</span>
-                    <strong id="availabilityLabel">8 evening slots currently open</strong>
+                    <strong id="availabilityLabel">Sign in to check live availability</strong>
                   </div>
                 </div>
               </div>
@@ -765,21 +766,21 @@
                   <p class="eyebrow">Stage 8</p>
                   <h3>Review the breakdown before gateway payment</h3>
                 </div>
-                <span class="badge badge-neutral">Razorpay / PayU / Stripe</span>
+                <span class="badge badge-neutral">Secure Razorpay checkout</span>
               </div>
               <div class="payment-layout">
                 <div class="surface">
                   <h4>Ready for checkout</h4>
-                  <p>Payments can hand off to the preferred gateway and generate GST invoices once the campaign is confirmed.</p>
-                  <div class="gateway-row">
-                    <span>Preferred gateway</span>
-                    <select id="gatewaySelect">
-                      <option>Razorpay</option>
-                      <option>PayU</option>
-                      <option>Stripe</option>
-                    </select>
+                  <p>Your selected dates are reserved for 15 minutes while you complete payment. The final amount is recalculated securely on our server.</p>
+                  <button class="button button-primary wide-button" id="payNowButton" type="button" disabled>Check availability to continue</button>
+                  <p class="map-help" id="paymentStatus" aria-live="polite">Select a truck, package, date, and time slot first.</p>
+                  <div class="booking-confirmation is-hidden" id="bookingConfirmation" aria-live="polite">
+                    <span class="success-mark">OK</span>
+                    <div>
+                      <strong id="bookingConfirmationTitle">Booking confirmed</strong>
+                      <p id="bookingConfirmationCopy">Your receipt and trip-start code have been emailed to you.</p>
+                    </div>
                   </div>
-                  <button class="button button-primary wide-button" type="button">Proceed to gateway</button>
                 </div>
                 <div class="surface surface-accent">
                   <h4>Invoice notes</h4>
@@ -806,8 +807,8 @@
                   <p>The customer owns this one-time code. Give it to the assigned driver, or enter it here when the truck reaches the campaign start point.</p>
                   <div class="trip-code-card">
                     <span>Customer trip OTP</span>
-                    <strong id="tripOtpDisplay">274891</strong>
-                    <small>Valid only for TRK-HYD-204 at the scheduled start time</small>
+                    <strong id="tripOtpDisplay">Available after payment</strong>
+                    <small>Valid only for your confirmed truck and scheduled start time</small>
                   </div>
                   <div class="trip-otp-actions">
                     <button class="button button-secondary" id="copyTripOtp" type="button">Copy OTP for driver</button>
@@ -817,7 +818,7 @@
                     OTP code
                     <input id="otpInput" class="otp-input" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" aria-describedby="otpHelp">
                   </label>
-                  <p class="map-help" id="otpHelp">Prototype code: 274891. In production, a unique code is generated for every paid booking.</p>
+                  <p class="map-help" id="otpHelp">Your unique code is issued after payment and included in the confirmation email.</p>
                   <button class="button button-primary wide-button" id="verifyOtp" type="button">Verify and start tracking</button>
                 </div>
                 <div class="surface surface-accent otp-result">
