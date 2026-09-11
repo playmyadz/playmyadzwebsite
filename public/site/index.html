@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlayMyAdz | Mobile LED Advertising</title>
+  <meta
+    name="description"
+    content="Book mobile LED advertising trucks across Hyderabad with route planning, creative management, GPS tracking, and campaign reporting."
+  >
+  <!-- Add a restricted Google Maps Embed API key here for production directions embeds. -->
+  <meta name="google-maps-api-key" content="">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="styles.css?v=10">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="PlayMyAdz home">
+        <span class="brand-mark">PM</span>
+        <span class="brand-copy">
+          <strong>PlayMyAdz</strong>
+          <small>Mobile LED Advertising</small>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/#what-we-do">What We Do</a>
+        <a href="/fleet">Trucks &amp; Pricing</a>
+        <a href="/tracking">Live Tracking</a>
+        <a href="/account" id="accountNavLink">Customer Access</a>
+      </nav>
+      <a class="nav-cta" href="/book">Book a Truck</a>
+    </header>
+
+    <main id="top">
+      <section class="subpage-hero subpage-book">
+        <div>
+          <p class="eyebrow">Campaign booking</p>
+          <h1>Plan your mobile LED campaign.</h1>
+          <p>Choose a truck, upload creative, set a Hyderabad route, select dates, and review the full price.</p>
+        </div>
+        <span class="subpage-number">01</span>
+      </section>
+      <section class="subpage-hero subpage-fleet">
+        <div>
+          <p class="eyebrow">Trucks and pricing</p>
+          <h1>Three screens built for moving attention.</h1>
+          <p>Explore the PlayMyAdz LED truck format and indicative Hyderabad pilot packages.</p>
+        </div>
+        <span class="subpage-number">02</span>
+      </section>
+      <section class="subpage-hero subpage-tracking">
+        <div>
+          <p class="eyebrow">Campaign visibility</p>
+          <h1>Follow your booked truck live.</h1>
+          <p>Monitor route progress, speed, arrival estimate, GPS signal, and display playback status.</p>
+        </div>
+        <span class="subpage-number">03</span>
+      </section>
+      <section class="subpage-hero subpage-operations">
+        <div>
+          <p class="eyebrow">Platform operations</p>
+          <h1>Keep every campaign moving.</h1>
+          <p>Manage approvals, creative reviews, scheduling, payments, and campaign reporting.</p>
+        </div>
+        <span class="subpage-number">04</span>
+      </section>
+      <section class="subpage-hero subpage-account">
+        <div>
+          <p class="eyebrow">Verified customer access</p>
+          <h1>Your campaign starts with a secure account.</h1>
+          <p>Register once, verify your email, and then plan routes, check availability, compare packages, pay, and start trips.</p>
+        </div>
+        <span class="subpage-number">ID</span>
+      </section>
+
+      <section class="portal-gate" aria-labelledby="portal-gate-title">
+        <div class="gate-lock" aria-hidden="true">ID</div>
+        <div>
+          <p class="eyebrow">Customer portal protected</p>
+          <h2 id="portal-gate-title">Verify your email to continue.</h2>
+          <p>Availability, route planning, packages, payment, and live campaign tracking are available only to registered customers with a verified email address.</p>
+          <div class="gate-points">
+            <span>Verified email</span>
+            <span>Private campaign access</span>
+            <span>Secure trip OTP</span>
+          </div>
+          <a class="button button-primary" href="/account">Register or sign in</a>
+        </div>
+      </section>
+
+      <section class="trip-start-gate" aria-labelledby="trip-start-title">
+        <div>
+          <p class="eyebrow">Campaign scheduled</p>
+          <h2 id="trip-start-title">Start the trip to unlock live tracking.</h2>
+          <p>When the truck reaches the agreed starting point, give the campaign OTP to the driver or enter it below. The same one-time code starts the trip and records who verified it.</p>
+        </div>
+        <div class="trip-start-entry">
+          <label>
+            Six-digit trip OTP
+            <input id="trackingOtpInput" class="otp-input" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000">
+          </label>
+          <p class="map-help" id="trackingOtpHelp">Prototype code: 274891</p>
+          <button class="button button-primary wide-button" id="trackingOtpVerify" type="button">Start trip and open tracking</button>
+        </div>
+      </section>
+
+      <section class="account-section" aria-labelledby="account-title">
+        <div class="account-layout">
+          <div class="account-intro">
+            <p class="eyebrow">Customer onboarding</p>
+            <h2 id="account-title">One verified account for the full campaign.</h2>
+            <p>Your verified email becomes the identity for bookings, payment receipts, trip-start codes, live tracking, and campaign reports.</p>
+            <ol class="access-steps">
+              <li><span>01</span><div><strong>Register your business</strong><small>Add the campaign owner and contact details.</small></div></li>
+              <li><span>02</span><div><strong>Verify your email</strong><small>Use the secure code sent to your inbox.</small></div></li>
+              <li><span>03</span><div><strong>Open the customer portal</strong><small>Book, pay, track, and verify future trips.</small></div></li>
+            </ol>
+          </div>
+
+          <div class="account-card" id="registrationCard">
+            <div class="account-card-head">
+              <div>
+                <p class="eyebrow">Create customer account</p>
+                <h3>Register with your work email</h3>
+              </div>
+              <span class="badge badge-neutral">Step 1 of 2</span>
+            </div>
+            <form id="registrationForm" class="account-form">
+              <label>
+                Full name
+                <input id="registerName" name="name" type="text" autocomplete="name" placeholder="Your name" required>
+              </label>
+              <label>
+                Business name
+                <input id="registerBusiness" name="business" type="text" autocomplete="organization" placeholder="Company or brand" required>
+              </label>
+              <label class="account-form-wide">
+                Work email
+                <input id="registerEmail" name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+              </label>
+              <label class="account-form-wide">
+                Mobile number
+                <input id="registerMobile" name="mobile" type="tel" autocomplete="tel" placeholder="+91 98765 43210" required>
+              </label>
+              <label class="consent-row account-form-wide">
+                <input type="checkbox" required>
+                <span>I agree to receive account, booking, payment, and trip notifications.</span>
+              </label>
+              <button class="button button-primary account-form-wide" type="submit">Send email verification code</button>
+            </form>
+            <p class="form-note">Production accounts will be stored securely on the server. Passwords and payment credentials are never kept in this page.</p>
+          </div>
+
+          <div class="account-card is-hidden" id="emailVerificationCard">
+            <div class="account-card-head">
+              <div>
+                <p class="eyebrow">Check your inbox</p>
+                <h3>Verify your email address</h3>
+              </div>
+              <span class="badge badge-warm">Step 2 of 2</span>
+            </div>
+            <p>Enter the six-digit code sent to <strong id="verificationEmail">your email</strong>.</p>
+            <label>
+              Email verification code
+              <input id="emailOtpInput" class="otp-input" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000">
+            </label>
+            <p class="map-help" id="emailOtpHelp">Prototype code: 418206</p>
+            <button class="button button-primary wide-button" id="verifyEmailButton" type="button">Verify email and open portal</button>
+            <button class="text-button" id="changeRegistrationButton" type="button">Change registration details</button>
+          </div>
+
+          <div class="account-card account-success is-hidden" id="accountSuccessCard">
+            <span class="success-mark">OK</span>
+            <p class="eyebrow">Email verified</p>
+            <h3>Welcome to your PlayMyAdz portal.</h3>
+            <p id="verifiedAccountCopy">Your customer access is active.</p>
+            <div class="account-actions">
+              <a class="button button-primary" href="/book">Build a campaign</a>
+              <a class="button button-secondary" href="/tracking">View tracking</a>
+            </div>
+            <button class="text-button" id="signOutButton" type="button">Sign out of this session</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Hyderabad mobile LED advertising</p>
+          <h1>Advertising that moves with you.</h1>
+          <p class="hero-text">
+            Put your brand on three-sided LED trucks that travel through the routes your
+            customers use. Plan, book, track, and verify every campaign from one platform.
+          </p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="/book">Build a Campaign</a>
+            <a class="button button-secondary" href="/fleet">Explore LED Trucks</a>
+          </div>
+          <dl class="hero-metrics" aria-label="Platform highlights">
+            <div>
+              <dt>3-side</dt>
+              <dd>high-visibility LED display</dd>
+            </div>
+            <div>
+              <dt>GPS</dt>
+              <dd>live route visibility</dd>
+            </div>
+            <div>
+              <dt>HYD pilot</dt>
+              <dd>local pilot market</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="hero-stage" aria-label="Platform preview">
+          <div class="signal-card status-approved">
+            <span>Hyderabad pilot fleet</span>
+            <strong>4-truck pilot fleet</strong>
+            <small>3 vehicles available in this demo</small>
+          </div>
+          <div class="hero-panel hero-truck-panel">
+            <img class="hero-truck-image" src="/site/images/playmyadz-truck.jpg" alt="PlayMyAdz three-sided mobile LED advertising truck in Hyderabad">
+            <div class="hero-panel-head">
+              <div>
+                <p>Campaign Snapshot</p>
+                <strong>BlueSip Hyderabad Launch</strong>
+              </div>
+              <span class="badge badge-warm">Ready to schedule</span>
+            </div>
+            <div class="hero-map">
+              <div class="map-chip">Start: HITEC City</div>
+              <div class="map-chip">End: Rajiv Gandhi International Airport</div>
+              <svg viewBox="0 0 360 220" aria-hidden="true">
+                <defs>
+                  <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#2dd4bf"></stop>
+                    <stop offset="100%" stop-color="#f97316"></stop>
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M42 170 C78 110, 118 148, 156 102 S232 36, 270 84 S318 150, 332 62"
+                  fill="none"
+                  stroke="url(#routeGradient)"
+                  stroke-linecap="round"
+                  stroke-width="10"
+                ></path>
+                <circle cx="42" cy="170" r="11"></circle>
+                <circle cx="332" cy="62" r="11"></circle>
+              </svg>
+            </div>
+            <div class="hero-stats">
+              <div>
+                <span>Package</span>
+                <strong>1 Day</strong>
+              </div>
+              <div>
+                <span>Route</span>
+                <strong>32 km</strong>
+              </div>
+              <div>
+                <span>Slot</span>
+                <strong>Evening</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="feature-band" id="what-we-do" aria-labelledby="why-title">
+        <div class="section-heading">
+          <p class="eyebrow">The PlayMyAdz difference</p>
+          <h2 id="why-title">Street-level visibility with digital campaign control.</h2>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card">
+            <span class="feature-index">01</span>
+            <h3>Three-sided LED display</h3>
+            <p>Your campaign stays visible from multiple viewing angles across busy roads and local markets.</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-index">02</span>
+            <h3>GPS route visibility</h3>
+            <p>Follow the vehicle, view trip progress, and verify that the campaign travelled its planned route.</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-index">03</span>
+            <h3>Remote content control</h3>
+            <p>Schedule or update approved creative without waiting for physical printing or vehicle access.</p>
+          </article>
+          <article class="feature-card">
+            <span class="feature-index">04</span>
+            <h3>Campaign reporting</h3>
+            <p>Playback status, route history, and operating metrics give advertisers clear delivery evidence.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="booking-options" id="booking-options">
+        <div class="section-heading">
+          <p class="eyebrow">Choose where to begin</p>
+          <h2>One platform, four focused experiences.</h2>
+          <p>Open only the part you need. Your campaign details stay connected across the full journey.</p>
+        </div>
+        <div class="booking-option-grid">
+          <a class="booking-option booking-option-primary" href="/book">
+            <span>01 · Advertiser</span>
+            <strong>Book a campaign</strong>
+            <p>Check truck availability, choose a route, upload creative, schedule, and pay.</p>
+            <b>Start booking</b>
+          </a>
+          <a class="booking-option" href="/fleet">
+            <span>02 · Explore</span>
+            <strong>Trucks and pricing</strong>
+            <p>See the three-sided LED format and compare campaign-duration packages.</p>
+            <b>View fleet</b>
+          </a>
+          <a class="booking-option" href="/tracking">
+            <span>03 · Customer</span>
+            <strong>Track a campaign</strong>
+            <p>Follow a booked truck and review GPS, trip progress, and playback status.</p>
+            <b>Open tracking</b>
+          </a>
+          <a class="booking-option" href="/operations">
+            <span>04 · Team</span>
+            <strong>Campaign operations</strong>
+            <p>Preview the internal approval, creative, scheduling, and reporting workflow.</p>
+            <b>View operations</b>
+          </a>
+        </div>
+      </section>
+
+      <section class="product-showcase" id="trucks">
+        <div class="showcase-image-wrap">
+          <img src="/site/images/playmyadz-led-fleet.jpg" alt="PlayMyAdz three-sided LED advertising truck concepts">
+          <span>Three screens. One moving campaign.</span>
+        </div>
+        <div class="showcase-copy">
+          <p class="eyebrow">Our mobile LED trucks</p>
+          <h2>Bring digital creative into Hyderabad’s busiest streets.</h2>
+          <p>PlayMyAdz combines moving LED displays with route planning and remote campaign management. Local businesses get the physical presence of outdoor media with more control over timing, location, and content.</p>
+          <div class="showcase-points">
+            <div><strong>High impact</strong><span>Bright displays built for street visibility</span></div>
+            <div><strong>Flexible routes</strong><span>Plan around the audience you want to reach</span></div>
+            <div><strong>Remote updates</strong><span>Switch approved creative during a campaign</span></div>
+          </div>
+          <a class="button button-primary" href="/book">Check vehicle availability</a>
+        </div>
+      </section>
+
+      <section class="pricing-section" id="pricing">
+        <div class="section-heading pricing-heading">
+          <div>
+            <p class="eyebrow">Indicative launch pricing</p>
+            <h2>Start with one day. Save with a longer campaign.</h2>
+          </div>
+          <p>Hyderabad pilot rates. Final pricing can vary by route, permissions, taxes, and content production.</p>
+        </div>
+        <div class="launch-pricing-grid">
+          <article><span>Quick launch</span><strong>1 Day</strong><b>₹15,000</b><p>Up to 50 km for launches, events, and one-day promotions.</p></article>
+          <article><span>Short campaign</span><strong>10 Days</strong><b>₹1.35 Lakh</b><p>₹13,500 per day for repeated local visibility.</p></article>
+          <article><span>Multi-week</span><strong>20 Days</strong><b>₹2.40 Lakh</b><p>₹12,000 per day across planned Hyderabad routes.</p></article>
+          <article class="pricing-best"><span>Best value</span><strong>30 Days</strong><b>₹3.15 Lakh</b><p>₹10,500 per day for sustained monthly reach.</p></article>
+        </div>
+      </section>
+
+      <section class="builder-section" id="flow">
+        <div class="section-heading">
+          <p class="eyebrow">Book as easily as a ride</p>
+          <h2>Build a campaign from sign-up to live tracking.</h2>
+          <p>Select each stage to check trucks, plan a route, upload content, pay, and verify the trip.</p>
+        </div>
+
+        <div class="builder-layout">
+          <aside class="builder-nav" aria-label="Booking stages">
+            <button class="step-button is-active" data-step="enquiry">
+              <span>01</span>
+              Enquiry
+            </button>
+            <button class="step-button" data-step="approval">
+              <span>02</span>
+              Approval
+            </button>
+            <button class="step-button" data-step="vehicle">
+              <span>03</span>
+              Availability
+            </button>
+            <button class="step-button" data-step="creative">
+              <span>04</span>
+              Creative
+            </button>
+            <button class="step-button" data-step="route">
+              <span>05</span>
+              Route
+            </button>
+            <button class="step-button" data-step="package">
+              <span>06</span>
+              Package
+            </button>
+            <button class="step-button" data-step="schedule">
+              <span>07</span>
+              Schedule
+            </button>
+            <button class="step-button" data-step="payment">
+              <span>08</span>
+              Payment
+            </button>
+            <button class="step-button" data-step="verification">
+              <span>09</span>
+              Verify Trip
+            </button>
+          </aside>
+
+          <div class="builder-stage">
+            <article class="flow-panel is-active" data-panel="enquiry">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Stage 1</p>
+                  <h3>Create an account and share the campaign request</h3>
+                </div>
+                <span class="badge badge-neutral">Sent to admin queue</span>
+              </div>
+              <div class="panel-grid">
+                <div class="surface">
+                  <label>
+                    Business name
+                    <input id="businessName" type="text" value="BlueSip Beverages">
+                  </label>
+                  <label>
+                    Contact email
+                    <input type="email" value="campaigns@bluesip.example">
+                  </label>
+                  <label>
+                    Ad type
+                    <select id="adType">
+                      <option>Product launch</option>
+                      <option>Seasonal promotion</option>
+                      <option>Store opening</option>
+                    </select>
+                  </label>
+                  <div class="enquiry-creative-choice">
+                    <span class="form-question">Do you already have the ad creative?</span>
+                    <div class="enquiry-choice-grid">
+                      <button class="enquiry-choice is-selected" type="button" data-ad-readiness="upload">
+                        <strong>I already have it</strong>
+                        <small>Upload your video or images in the Creative step.</small>
+                      </button>
+                      <button class="enquiry-choice" type="button" data-ad-readiness="create">
+                        <strong>Create the ad for me</strong>
+                        <small>PlayMyAdz prepares the video creative. ₹7,000 estimate.</small>
+                      </button>
+                    </div>
+                  </div>
+                  <label>
+                    Requirement summary
+                    <textarea rows="5">Launch a 30-second city campaign for our new sparkling drink across premium commuter routes.</textarea>
+                  </label>
+                </div>
+                <div class="surface surface-accent">
+                  <h4>Why this matters</h4>
+                  <p>The enquiry stage captures business intent first so the admin team can validate the campaign before booking inventory or collecting payments.</p>
+                  <ul class="signal-list">
+                    <li>Collects customer, business, and campaign details</li>
+                    <li>Creates an approval checkpoint before creative work starts</li>
+                    <li>Triggers email or SMS acknowledgement</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <article class="flow-panel" data-panel="approval">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Stage 2</p>
+                  <h3>Gate access with admin review</h3>
+                </div>
+                <button class="inline-action" id="approvalToggle" type="button">Approve enquiry</button>
+              </div>
+              <div class="status-strip">
+                <div class="status-pill">
+                  <span class="status-label">Current status</span>
+                  <strong id="approvalStatus">Pending review</strong>
+                </div>
+                <div class="status-pill">
+                  <span class="status-label">Access</span>
+                  <strong id="accessStatus">Portal locked</strong>
+                </div>
+                <div class="status-pill">
+                  <span class="status-label">Notification</span>
+                  <strong id="notifyStatus">Waiting to send</strong>
+                </div>
+              </div>
+              <div class="timeline-card">
+                <div class="timeline-item is-done">
+                  <span></span>
+                  <div>
+                    <strong>Enquiry submitted</strong>
+                    <p>Customer details and campaign requirement have been pushed to the admin dashboard.</p>
+                  </div>
+                </div>
+                <div class="timeline-item" id="approvalTimelineItem">
+                  <span></span>
+                  <div>
+                    <strong>Admin approval</strong>
+                    <p>Once approved, the customer receives access credentials or a secure link to continue booking.</p>
+                  </div>
+                </div>
+                <div class="timeline-item">
+                  <span></span>
+                  <div>
+                    <strong>Booking unlocked</strong>
+                    <p>Creative upload, route planning, and pricing become available only after review.</p>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="flow-panel" data-panel="vehicle">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Stage 3</p>
+                  <h3>Choose an available LED truck</h3>
+                </div>
+                <span class="badge badge-cool">Hyderabad pilot fleet</span>
+              </div>
+              <div class="vehicle-grid" id="vehicleGrid">
+                <button class="vehicle-card is-selected" type="button" data-truck="TRK-HYD-204">
+                  <span class="vehicle-status is-open">Available</span>
+                  <strong>TRK-HYD-204</strong>
+                  <small>Three-sided LED · HITEC City base</small>
+                  <b>Next slot: 10 Sep, 5:00 PM</b>
+                </button>
+                <button class="vehicle-card" type="button" data-truck="TRK-HYD-118">
+                  <span class="vehicle-status is-open">Available</span>
+                  <strong>TRK-HYD-118</strong>
+                  <small>Three-sided LED · Secunderabad base</small>
+                  <b>Next slot: 10 Sep, 9:00 AM</b>
+                </button>
+                <button class="vehicle-card" type="button" data-truck="TRK-HYD-309">
+                  <span class="vehicle-status is-open">Available</span>
+                  <strong>TRK-HYD-309</strong>
+                  <small>Three-sided LED · Madhapur base</small>
+                  <b>Next slot: 11 Sep, 1:00 PM</b>
+                </button>
+                <button class="vehicle-card is-unavailable" type="button" disabled>
+                  <span class="vehicle-status">Booked</span>
+                  <strong>TRK-HYD-412</strong>
+                  <small>Three-sided LED · Abids base</small>
+                  <b>Available again: 14 Sep</b>
+                </button>
+              </div>
+              <p class="fleet-note">Prototype availability is illustrative. Production inventory will update from the fleet scheduling system.</p>
+            </article>
+
+            <article class="flow-panel" data-panel="creative">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Stage 4</p>
+                  <h3>Choose an image or video creative</h3>
+                </div>
+                <span class="badge badge-cool" id="creativeFormatBadge">Video · MP4, AVI, MOV</span>
+              </div>
+              <div class="panel-grid">
+                <div class="surface">
+                  <div class="creative-type-options" aria-label="Creative format">
+                    <button class="creative-type-card is-selected" type="button" data-creative-type="video">
+                      <span>Moving creative</span>
+                      <strong>Video</strong>
+                      <small>MP4, AVI, or MOV</small>
+                    </button>
+                    <button class="creative-type-card" type="button" data-creative-type="image">
+                      <span>Static creative</span>
+                      <strong>Image</strong>
+                      <small>Up to 10 JPG, PNG, or WEBP files</small>
+                    </button>
+                  </div>
+                  <label class="upload-card">
+                    <input id="creativeUpload" type="file" accept=".mp4,.avi,.mov,video/mp4,video/quicktime">
+                    <span id="creativeUploadLabel">Drop a video file here or browse to upload</span>
+                    <small id="creativeUploadHelp">Choose one video file. Prototype uploads stay local.</small>
+                  </label>
+                  <div class="selected-files" id="selectedFiles" aria-live="polite"></div>
+                  <label id="durationControl">
+                    Ad duration
+                    <input id="durationRange" type="range" min="15" max="60" step="5" value="30">
+                    <span class="range-value"><strong id="durationValue">30</strong> seconds</span>
+                  </label>
+                  <label class="toggle-row" id="productionControl">
+                    <input id="needsVideo" type="checkbox">
+                    <span>No video yet, I need the in-house creation service</span>
+                  </label>
+                </div>
+                <div class="surface">
+                  <h4>Creative logic</h4>
+                  <div class="info-row">
+                    <span>Validation</span>
+                    <strong id="creativeValidationLabel">Duration and resolution checked</strong>
+                  </div>
+                  <div class="info-row">
+                    <span>Service fee</span>
+                    <strong id="creativeChargeLabel">₹0 added</strong>
+                  </div>
+                  <div class="info-row">
+                    <span>Review path</span>
+                    <strong id="creativePathLabel">Customer upload review</strong>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="flow-panel" data-panel="route">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Stage 5</p>
+                  <h3>Choose Hyderabad routes and tune the coverage radius</h3>
+                </div>
+                <span class="badge badge-cool">Google Maps · Hyderabad</span>
+              </div>
+              <div class="panel-grid route-grid">
+                <div class="surface">
+                  <div class="route-options" id="routeOptions">
+                    <button class="route-card is-selected" type="button" data-route="metro">
+                      <strong>Airport Axis</strong>
+                      <span>HITEC City to RGIA via Gachibowli</span>
+                      <small>32 km airport and tech corridor</small>
+                    </button>
+                    <button class="route-card" type="button" data-route="retail">
+                      <strong>Central Retail Loop</strong>
+                      <span>Abids to Charminar via Koti</span>
+                      <small>11 km high-footfall retail corridor</small>
+                    </button>
+                    <button class="route-card" type="button" data-route="campus">
+                      <strong>Tech Park Circuit</strong>
+                      <span>Madhapur to Financial District</span>
+                      <small>14 km professional audience route</small>
+                    </button>
+                  </div>
+                  <label>
+                    KM radius
+                    <input id="radiusRange" type="range" min="3" max="15" step="1" value="8">
+                    <span class="range-value"><strong id="radiusValue">8</strong> km service radius</span>
+                  </label>
+                </div>
+                <div class="surface surface-map">
+                  <div class="map-legend">
+                    <span id="routeName">Airport Axis</span>
+                    <strong id="routeDistance">32 km route selected</strong>
+                  </div>
+                  <form class="location-picker" id="locationPicker">
+                    <label>
+                      From
+                      <input id="originInput" list="hyderabadLocations" value="HITEC City, Hyderabad, Telangana" placeholder="Enter a Hyderabad landmark" autocomplete="street-address">
+                    </label>
+                    <label>
+                      To
+                      <input id="destinationInput" list="hyderabadLocations" value="Rajiv Gandhi International Airport, Hyderabad, Telangana" placeholder="Enter a Hyderabad landmark" autocomplete="street-address">
+                    </label>
+                    <button class="map-preview-button" type="submit">Preview route</button>
+                  </form>
+                  <datalist id="hyderabadLocations">
+                    <option value="HITEC City, Hyderabad, Telangana"></option>
+                    <option value="Madhapur, Hyderabad, Telangana"></option>
+                    <option value="Gachibowli, Hyderabad, Telangana"></option>
+                    <option value="Financial District, Hyderabad, Telangana"></option>
+                    <option value="Abids, Hyderabad, Telangana"></option>
+                    <option value="Charminar, Hyderabad, Telangana"></option>
+                    <option value="Secunderabad Junction, Hyderabad, Telangana"></option>
+                    <option value="Rajiv Gandhi International Airport, Hyderabad, Telangana"></option>
+                  </datalist>
+                  <p class="map-help" id="mapHelp">Select a route card or choose your own From and To locations.</p>
+                  <div class="map-stage">
+                    <iframe
+                      id="hyderabadMap"
+                      title="Google Maps route through Hyderabad"
+                      loading="lazy"
+                      referrerpolicy="no-referrer-when-downgrade"
+                      allowfullscreen
+                    ></iframe>
+                    <div class="map-overlay">
+                      <span id="mapAreaStatus">8 km campaign coverage</span>
+                      <a id="openMapLink" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="flow-panel" data-panel="package">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Stage 6</p>
+                  <h3>Choose a campaign duration</h3>
+                </div>
+                <span class="badge badge-warm">Dynamic quote</span>
+              </div>
+              <div class="package-grid" id="packageGrid">
+                <button class="package-card is-selected" type="button" data-package="day1">
+                  <span class="package-tag">1 Day</span>
+                  <strong>₹15,000</strong>
+                  <p>Up to 50 km for a launch, event, or one-day promotion.</p>
+                </button>
+                <button class="package-card" type="button" data-package="day10">
+                  <span class="package-tag">10 Days</span>
+                  <strong>₹1.35 Lakh</strong>
+                  <p>Repeated local visibility at ₹13,500 per day.</p>
+                </button>
+                <button class="package-card" type="button" data-package="day20">
+                  <span class="package-tag">20 Days</span>
+                  <strong>₹2.40 Lakh</strong>
+                  <p>Multi-week visibility at ₹12,000 per day.</p>
+                </button>
+                <button class="package-card" type="button" data-package="day30">
+                  <span class="package-tag">30 Days</span>
+                  <strong>₹3.15 Lakh</strong>
+                  <p>Best-value monthly package at ₹10,500 per day.</p>
+                </button>
+              </div>
+            </article>
+
+            <article class="flow-panel" data-panel="schedule">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Stage 7</p>
+                  <h3>Book dates and preferred playback windows</h3>
+                </div>
+                <span class="badge badge-cool">Availability check</span>
+              </div>
+              <div class="panel-grid">
+                <div class="surface">
+                  <h4>Preferred dates</h4>
+                  <div class="chip-grid" id="dateChoices"></div>
+                </div>
+                <div class="surface">
+                  <h4>Time slots</h4>
+                  <div class="chip-grid time-grid" id="timeChoices">
+                    <button class="choice-chip" type="button" data-slot="Morning">Morning</button>
+                    <button class="choice-chip" type="button" data-slot="Afternoon">Afternoon</button>
+                    <button class="choice-chip is-selected" type="button" data-slot="Evening">Evening</button>
+                    <button class="choice-chip" type="button" data-slot="Night">Night</button>
+                  </div>
+                  <div class="availability-card">
+                    <span>Real-time availability</span>
+                    <strong id="availabilityLabel">8 evening slots currently open</strong>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article class="flow-panel" data-panel="payment">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Stage 8</p>
+                  <h3>Review the breakdown before gateway payment</h3>
+                </div>
+                <span class="badge badge-neutral">Razorpay / PayU / Stripe</span>
+              </div>
+              <div class="payment-layout">
+                <div class="surface">
+                  <h4>Ready for checkout</h4>
+                  <p>Payments can hand off to the preferred gateway and generate GST invoices once the campaign is confirmed.</p>
+                  <div class="gateway-row">
+                    <span>Preferred gateway</span>
+                    <select id="gatewaySelect">
+                      <option>Razorpay</option>
+                      <option>PayU</option>
+                      <option>Stripe</option>
+                    </select>
+                  </div>
+                  <button class="button button-primary wide-button" type="button">Proceed to gateway</button>
+                </div>
+                <div class="surface surface-accent">
+                  <h4>Invoice notes</h4>
+                  <ul class="signal-list">
+                    <li>Package, route, video service, and slot costs are itemized</li>
+                    <li>GST is calculated separately for invoice generation</li>
+                    <li>Confirmation can trigger email or SMS notifications</li>
+                  </ul>
+                </div>
+              </div>
+            </article>
+
+            <article class="flow-panel" data-panel="verification">
+              <div class="panel-head">
+                <div>
+                  <p class="eyebrow">Stage 9</p>
+                  <h3>Verify campaign start with an OTP</h3>
+                </div>
+                <span class="badge badge-neutral" id="otpBadge">Verification pending</span>
+              </div>
+              <div class="panel-grid otp-layout">
+                <div class="surface">
+                  <h4>Choose how to start the trip</h4>
+                  <p>The customer owns this one-time code. Give it to the assigned driver, or enter it here when the truck reaches the campaign start point.</p>
+                  <div class="trip-code-card">
+                    <span>Customer trip OTP</span>
+                    <strong id="tripOtpDisplay">274891</strong>
+                    <small>Valid only for TRK-HYD-204 at the scheduled start time</small>
+                  </div>
+                  <div class="trip-otp-actions">
+                    <button class="button button-secondary" id="copyTripOtp" type="button">Copy OTP for driver</button>
+                    <button class="button button-secondary" id="focusTripOtp" type="button">Enter OTP here</button>
+                  </div>
+                  <label>
+                    OTP code
+                    <input id="otpInput" class="otp-input" type="text" inputmode="numeric" maxlength="6" autocomplete="one-time-code" placeholder="000000" aria-describedby="otpHelp">
+                  </label>
+                  <p class="map-help" id="otpHelp">Prototype code: 274891. In production, a unique code is generated for every paid booking.</p>
+                  <button class="button button-primary wide-button" id="verifyOtp" type="button">Verify and start tracking</button>
+                </div>
+                <div class="surface surface-accent otp-result">
+                  <span class="verification-icon" id="verificationIcon">6</span>
+                  <h4 id="verificationTitle">Waiting for verification</h4>
+                  <p id="verificationCopy">OTP verification confirms that the assigned truck and advertiser are ready at the scheduled start time.</p>
+                  <div class="info-row"><span>Selected truck</span><strong id="verificationTruck">TRK-HYD-204</strong></div>
+                  <div class="info-row"><span>Tracking access</span><strong id="verificationTracking">Locked</strong></div>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <aside class="quote-card">
+            <div class="quote-head">
+              <p class="eyebrow">Live summary</p>
+              <h3 id="summaryBusinessName">BlueSip Beverages</h3>
+              <span class="badge badge-status" id="summaryApproval">Awaiting approval</span>
+            </div>
+            <dl class="summary-list">
+              <div>
+                <dt>Truck</dt>
+                <dd id="summaryTruck">TRK-HYD-204</dd>
+              </div>
+              <div>
+                <dt>Package</dt>
+                <dd id="summaryPackage">1 Day</dd>
+              </div>
+              <div>
+                <dt>Route</dt>
+                <dd id="summaryRoute">Airport Axis</dd>
+              </div>
+              <div>
+                <dt>Distance</dt>
+                <dd id="summaryDistance">32 km</dd>
+              </div>
+              <div>
+                <dt>Radius</dt>
+                <dd id="summaryRadius">8 km</dd>
+              </div>
+              <div>
+                <dt>Duration</dt>
+                <dd id="summaryDuration">30 sec</dd>
+              </div>
+              <div>
+                <dt>Creative</dt>
+                <dd id="summaryCreative">Video</dd>
+              </div>
+              <div>
+                <dt>Slot</dt>
+                <dd id="summarySlot">Evening</dd>
+              </div>
+            </dl>
+            <div class="cost-stack">
+              <div class="cost-row">
+                <span>Base package</span>
+                <strong id="costPackage">₹15,000</strong>
+              </div>
+              <div class="cost-row">
+                <span>Route + radius</span>
+                <strong id="costRoute">₹0</strong>
+              </div>
+              <div class="cost-row">
+                <span>Creative service</span>
+                <strong id="costCreative">₹0</strong>
+              </div>
+              <div class="cost-row">
+                <span>Slot uplift</span>
+                <strong id="costSlot">₹3,200</strong>
+              </div>
+              <div class="cost-row">
+                <span>GST</span>
+                <strong id="costTax">₹5,029</strong>
+              </div>
+            </div>
+            <div class="cost-total">
+              <span>Total estimate</span>
+              <strong id="costTotal">₹21,476</strong>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="dashboard-section" id="customer-hub">
+        <div class="section-heading">
+          <p class="eyebrow">Customer portal</p>
+          <h2>A clear dashboard after booking.</h2>
+        </div>
+        <div class="dashboard-grid">
+          <article class="dashboard-card live-tracking-card">
+            <div class="card-head live-tracking-head">
+              <div>
+                <p>Live trip tracking</p>
+                <strong id="trackerTruckTitle">TRK-HYD-204 · Airport Axis</strong>
+              </div>
+              <div class="live-status-cluster">
+                <span class="live-dot" aria-hidden="true"></span>
+                <span class="badge badge-cool">GPS signal live</span>
+              </div>
+            </div>
+            <div class="live-tracking-layout">
+              <div class="tracker-map" aria-label="Live truck position from HITEC City to Rajiv Gandhi International Airport">
+                <span class="tracker-road tracker-road-one" aria-hidden="true"></span>
+                <span class="tracker-road tracker-road-two" aria-hidden="true"></span>
+                <span class="tracker-road tracker-road-three" aria-hidden="true"></span>
+                <span class="tracker-place tracker-place-start">HITEC City</span>
+                <span class="tracker-place tracker-place-mid">Gachibowli</span>
+                <span class="tracker-place tracker-place-end">RGIA</span>
+                <div class="truck-marker" id="liveTruckMarker" aria-hidden="true">TRK</div>
+                <div class="tracker-map-footer">
+                  <span id="trackerLocation">Leaving HITEC City</span>
+                  <strong id="trackerLastUpdate">Updated just now</strong>
+                </div>
+              </div>
+              <div class="telemetry-panel">
+                <div class="telemetry-grid">
+                  <div>
+                    <span>Trip progress</span>
+                    <strong id="trackerProgressText">12%</strong>
+                  </div>
+                  <div>
+                    <span>Current speed</span>
+                    <strong id="trackerSpeed">32 km/h</strong>
+                  </div>
+                  <div>
+                    <span>Estimated arrival</span>
+                    <strong id="trackerEta">52 min</strong>
+                  </div>
+                  <div>
+                    <span>Display status</span>
+                    <strong class="telemetry-good">Ad playing</strong>
+                  </div>
+                </div>
+                <div class="trip-progress" role="progressbar" aria-label="Truck trip progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="12">
+                  <span id="trackerProgressBar"></span>
+                </div>
+                <p class="tracker-note">Prototype GPS simulation. Production tracking connects a driver app or truck GPS device to the customer dashboard.</p>
+                <div class="tracker-actions">
+                  <button class="button button-primary" id="trackerToggle" type="button">Pause live demo</button>
+                  <a class="button button-secondary" href="https://www.google.com/maps/dir/?api=1&origin=HITEC+City%2C+Hyderabad%2C+Telangana&destination=Rajiv+Gandhi+International+Airport%2C+Hyderabad%2C+Telangana&travelmode=driving" target="_blank" rel="noopener noreferrer">View full route</a>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="dashboard-card dashboard-card-tall">
+            <div class="card-head">
+              <div>
+                <p>Campaign health</p>
+                <strong>3 active bookings</strong>
+              </div>
+              <span class="badge badge-warm">2 approvals pending</span>
+            </div>
+            <div class="campaign-strip">
+              <div>
+                <span>Downtown Launch</span>
+                <strong>Creative approved</strong>
+              </div>
+              <div>
+                <span>Weekend Offer</span>
+                <strong>Awaiting payment</strong>
+              </div>
+              <div>
+                <span>Campus Push</span>
+                <strong>Scheduled for Sep 14</strong>
+              </div>
+            </div>
+          </article>
+
+          <article class="dashboard-card">
+            <p>Payment history</p>
+            <strong>₹68,400 collected</strong>
+            <small>Invoices and gateway receipts stay attached to each booking.</small>
+          </article>
+
+          <article class="dashboard-card">
+            <p>Creative status</p>
+            <strong>1 reupload requested</strong>
+            <small>Review feedback is visible without leaving the portal.</small>
+          </article>
+
+          <article class="dashboard-card dashboard-card-wide">
+            <p>Notification timeline</p>
+            <div class="timeline-compact">
+              <span>Approval email sent</span>
+              <span>Video upload confirmed</span>
+              <span>Payment receipt delivered</span>
+              <span>Schedule reminder queued</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="admin-section" id="admin-ops">
+        <div class="section-heading">
+          <p class="eyebrow">Admin operations</p>
+          <h2>The backend touchpoints this frontend hands off to.</h2>
+        </div>
+        <div class="admin-grid">
+          <article class="admin-card">
+            <div class="card-head">
+              <div>
+                <p>Approval queue</p>
+                <strong>12 enquiries</strong>
+              </div>
+              <span class="badge badge-neutral">Needs review</span>
+            </div>
+            <ul class="signal-list">
+              <li>Approve or reject enquiries</li>
+              <li>Assign portal access</li>
+              <li>Trigger notification workflows</li>
+            </ul>
+          </article>
+          <article class="admin-card">
+            <div class="card-head">
+              <div>
+                <p>Creative desk</p>
+                <strong>5 videos in review</strong>
+              </div>
+              <span class="badge badge-cool">Designer handoff</span>
+            </div>
+            <ul class="signal-list">
+              <li>Review uploads and duration compliance</li>
+              <li>Create jobs for in-house video production</li>
+              <li>Approve or request reupload</li>
+            </ul>
+          </article>
+          <article class="admin-card">
+            <div class="card-head">
+              <div>
+                <p>Scheduling board</p>
+                <strong>84% slot usage</strong>
+              </div>
+              <span class="badge badge-warm">High demand</span>
+            </div>
+            <ul class="signal-list">
+              <li>Validate route, radius, and time windows</li>
+              <li>Prevent overbooking by slot availability</li>
+              <li>Assign playback timelines to campaigns</li>
+            </ul>
+          </article>
+          <article class="admin-card">
+            <div class="card-head">
+              <div>
+                <p>Revenue + reports</p>
+                <strong>60% target utilization</strong>
+              </div>
+              <span class="badge badge-neutral">Invoice ready</span>
+            </div>
+            <ul class="signal-list">
+              <li>Track payments and invoice downloads</li>
+              <li>Monitor campaign and slot usage statistics</li>
+              <li>Support designer, reviewer, and scheduler roles</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="integration-section">
+        <div class="section-heading">
+          <p class="eyebrow">Integration-ready</p>
+          <h2>Clear next steps for production wiring.</h2>
+        </div>
+        <div class="integration-grid">
+          <article class="integration-card">
+            <h3>Maps engine</h3>
+            <p>Replace the prototype route cards with Google Maps routes, polyline editing, and distance calculation APIs.</p>
+          </article>
+          <article class="integration-card">
+            <h3>Payments and invoicing</h3>
+            <p>Connect Razorpay, PayU, or Stripe checkout and generate GST invoices after settlement.</p>
+          </article>
+          <article class="integration-card">
+            <h3>Media storage</h3>
+            <p>Store uploaded creative securely in private object storage with duration validation and approval queues.</p>
+          </article>
+          <article class="integration-card">
+            <h3>Notifications</h3>
+            <p>Trigger SMTP, SendGrid, Mailgun, Twilio, or MSG91 messages for every major customer and admin event.</p>
+          </article>
+          <article class="integration-card integration-card-live">
+            <h3>Live fleet GPS</h3>
+            <p>Receive coordinates from a driver app or GPS tracker, stream them through WebSockets, and store trip history for customer proof-of-run reports.</p>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="contact">
+      <div>
+        <p class="eyebrow">PlayMyAdz · Hyderabad</p>
+        <h2>Let’s move advertising forward.</h2>
+        <p class="footer-contact"><a href="mailto:info@playmyadz.com">info@playmyadz.com</a><span>+91 93917 84589</span><a href="https://www.playmyadz.co.in" target="_blank" rel="noopener noreferrer">www.playmyadz.co.in</a></p>
+      </div>
+      <a class="button button-primary" href="/book">Book a campaign</a>
+    </footer>
+  </div>
+
+  <script src="script.js?v=10"></script>
+</body>
+</html>
