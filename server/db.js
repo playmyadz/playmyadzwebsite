@@ -69,7 +69,7 @@ const statements = [
     subtotal_paise INT UNSIGNED NOT NULL,
     gst_paise INT UNSIGNED NOT NULL,
     total_paise INT UNSIGNED NOT NULL,
-    status ENUM('payment_pending', 'payment_authorized', 'confirmed', 'expired', 'cancelled', 'started', 'completed') NOT NULL,
+    status ENUM('payment_pending', 'payment_authorized', 'payment_review', 'confirmed', 'expired', 'cancelled', 'started', 'completed') NOT NULL,
     razorpay_order_id VARCHAR(64) NULL UNIQUE,
     razorpay_payment_id VARCHAR(64) NULL UNIQUE,
     trip_otp_hash CHAR(64) NOT NULL,
@@ -110,6 +110,10 @@ export async function initializeDatabase() {
   for (const statement of statements) {
     await db.query(statement);
   }
+  await db.query(
+    `ALTER TABLE bookings MODIFY status
+     ENUM('payment_pending', 'payment_authorized', 'payment_review', 'confirmed', 'expired', 'cancelled', 'started', 'completed') NOT NULL`,
+  );
   await db.execute(
     `INSERT INTO trucks (id, display_name, status)
      VALUES ('TRK-HYD-204', 'PlayMyAdz Hyderabad LED Truck', 'active')
