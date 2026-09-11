@@ -18,7 +18,15 @@
   >
   <link rel="stylesheet" href="styles.css?v=10">
 </head>
-<body>
+<body class="route-page route-home">
+  <script>
+    (() => {
+      const supportedRoutes = new Set(["account", "book", "fleet", "operations", "tracking"]);
+      const requestedRoute = window.location.pathname.split("/").filter(Boolean)[0] || "home";
+      const route = supportedRoutes.has(requestedRoute) ? requestedRoute : "home";
+      document.body.className = `route-page route-${route}`;
+    })();
+  </script>
   <div class="page-shell">
     <header class="site-header">
       <a class="brand" href="/" aria-label="PlayMyAdz home">
