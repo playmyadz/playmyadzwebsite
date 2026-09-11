@@ -1,0 +1,6 @@
+RewriteEngine On
+
+# Serve real files directly and route application pages through the main document.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
